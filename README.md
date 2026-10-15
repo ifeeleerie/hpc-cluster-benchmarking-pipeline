@@ -10,14 +10,18 @@ An automated testing framework built for the **Cirrus Supercomputer (EPCC)** to 
 
 ## 📂 System Architecture
 ```text
-├── README.md               # Pipeline documentation & operational layout
-├── results.csv             # Structured telemetry database file
+├── README.md                 # System documentation & architectural roadmap
+├── results.csv               # Processed experiment 3 dataset (MPI vs OpenMP)
+├── autotune_results_unified.csv # Output database following schema translation
 ├── automation/
-│   └── sweep.py            # Automated SLURM execution generation script
+│   ├── sweep.py              # Combinatorial SLURM configuration generator
+│   ├── provenance.py         # Git & compiler module hash metadata engine
+│   └── replicate.py          # Auto-incrementing path router for repeat runs
 ├── parser/
-│   └── parse.py            # Precision regex energy extraction engine
+│   ├── parse.py              # Window-isolated runtime & validation log scraper
+│   └── converter.py          # Legacy-to-autotuner data transformation tool
 └── analysis/
-    └── plot.py             # Automatic matplotlib scaling graph generator
+    └── plot.py               # Automated matplotlib performance scaling chart generator
 ```
 
 ## 🛠️ Cluster Deployment
@@ -25,10 +29,15 @@ An automated testing framework built for the **Cirrus Supercomputer (EPCC)** to 
 Ensure your environment path is configured with the standard data analytics structures on Cirrus before triggering the visualization modules:
 
 ```bash
-# Load environmental library paths
-module load python
-pip3 install --user pandas matplotlib
+# Move into private secured workspace
+cd ~/hpc-cluster-benchmarking-pipeline
 
-# Run the visualization pipeline tool
-python3 analysis/plot.py
+# Load core system paths and resolve version dependency binds
+module load python
+pip3 install --user --upgrade "numpy<2" pandas matplotlib
+
+# Run the system validation checks
+python3 automation/provenance.py
+python3 automation/replicate.py
+python3 parser/converter.py
 ```
